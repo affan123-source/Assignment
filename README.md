@@ -110,3 +110,13 @@ Example 2 :
 9.Decrypted Plaintext (Trimmed): 10 5e 23 11 00 01 00 00
 
 
+Compilation (Linux / macOS):
+g++ main.cpp -o decrypt
+
+Compilation (Windows with MinGW):
+g++ main.cpp -o decrypt.exe
+
+Run:
+./decrypt --key <AES_KEY> --tele <ENCRYPTED_TELEGRAM>
+
+
