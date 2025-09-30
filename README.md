@@ -60,13 +60,15 @@ Show in hex. Parsing of DIF/VIF can follow if required.
   I have used Vs code for debugging and running the code
   1) I created a file C++ file and written the code .
   2) I saved the code with name main.cpp and compiled it using g++ main.cpp -o decrypt
-  3) once compilation was done it was ready to run I used decrypt command to run and got output.
+  3) once compilation was done it was ready to run I used .\decrypt command to run and got output.
 OUTPUT :-
+![Decryption Output](assignment.png)
+
   
 
 
 
-4) Examples of input of output.
+5) Examples of input of output.
 Example 1:
    Key : 4255794d3dccfd46953146e701b7db68
 Telegram :      a144c5142785895070078c20607a9d00902537ca231fa2da5889Be8df3673ec136aeBfB80d4ce395Ba98f6B3844a115e4Be1B1c9f0a2d5ffBB92906aa388deaa82c929310e9e5c4c0922a784df89cf0ded833Be8da996eB5885409B6c9867978dea24001d68c603408d758a1e2B91c42eBad86a9B9d287880083BB0702850574d7B51e9c209ed68e0374e9B01feBfd92B4cB9410fdeaf7fB526B742dc9a8d0682653
