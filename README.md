@@ -7,7 +7,7 @@ Header consists of following parts :-
   3)[CI] - 1 byte (control info)
   4)[ACC] - 1 byte (access number, changes each time)
   5)[STATUS] - 1 byte
-  6)[CFG] - 1 byte (configuration)
+  6)[CFG] - 2 byte (configuration)
 Encrypted data - This part contains the actual meter values and extra fields.
 It is locked using AES-128 encryption, so we cannot read it directly.
 
@@ -18,11 +18,16 @@ To decrypt the encrypted data, we need three things:
   2) IV (Initialization Vector) – must be built from the header
   3) Encrypted message – the second part of the telegram
 AES-128 CBC mode uses these to get the decrypted output.
-OMS tells us to create the IV using  things from the header:
-OMS IV = [ A-Field (8 bytes) ] + [ ACC repeated 8 times].
-1.	The A-Field consists of 8 bytes (Manufacturer ID, Device ID, Version, Device Type).
-2.	The ACC (Access Number) is 1 byte and changes with every telegram.
-3.	This ACC byte is repeated 8 times to complete the 16-byte IV.
+OMS tells us to create the IV using things from the header:
+
+• M-Field (2 bytes – Manufacturer ID)
+• A-Field (6 bytes – Device ID, Version, Device Type)
+
+OMS IV = [ M-Field + A-Field ] + [ ACC repeated 8 times ]
+
+The ACC (Access Number) is 1 byte and changes with every telegram.
+This ACC byte is repeated 8 times to complete the 16-byte IV.
+
 
 AES-128 is applied in CBC mode, meaning each 16-byte block is decrypted using the key and then XOR with the previous block.
 
@@ -38,13 +43,13 @@ The encrypted W-M Bus frame is read in hex format.
 •	CI Field Check
 If the CI (Control Information) byte is 0x7A, it indicates AES encrypted payload.
 •	Extract OMS Metadata
-•	A-Field (8 bytes before the CI)
+•	Address Field (8 bytes before the CI)
 •	ACC (Access Number, 1 byte)
 •	Security Mode (must be 5)
 •	IV Construction
-IV = [A-Field (8 bytes)] + [ACC repeated 8 times]
+IV = [Address Field (8 bytes)] + [ACC repeated 8 times]
 •	Ciphertext Extraction
-Encrypted data begins after the TPL header (after CI and ACC).
+Encrypted data begins after the TPL header (after CI and ACC,STATUS, CFG-L ,CFG-H).
 •	AES-128 CBC Decryption
 Decrypt using:
 •	AES-128 key
@@ -52,7 +57,7 @@ Decrypt using:
 •	Ciphertext (multiple of 16 bytes)
 •	Remove Filler Bytes (0x2F)
 OMS uses byte 2F as padding/filler.
-Any trailing 0x2F bytes must be trimmed from the plaintext.
+Trim filler 0x2F bytes at the boundaries.
 •	Output the Plaintext
 Show in hex. Parsing of DIF/VIF can follow if required.
 
@@ -77,7 +82,7 @@ Telegram :      a144c5142785895070078c20607a9d00902537ca231fa2da5889Be8df3673ec1
 13
 2.	CI value:
 0x7a
-3.	A-Field:
+3.	Address Field:
 85 89 50 70 07 8c 20 60
 4.	Access Number (ACC):
 0x9d
@@ -103,7 +108,7 @@ Example 2 :
        OUTPUT :-
        1. CI index : 10
 2.CI value : 0x7a
-3.A-Field: 12 34 56 78 11 22 33 44
+3.Address Field: 12 34 56 78 11 22 33 44
 4.Access Number (ACC): 0x5a
 5.Security Mode: 5
 6.IV :12 34 56 78 11 22 33 44 5a 5a 5a 5a 5a 5a 5a 5a
