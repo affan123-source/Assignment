@@ -67,7 +67,8 @@ Show in hex. Parsing of DIF/VIF can follow if required.
   2) I saved the code with name main.cpp and compiled it using g++ main.cpp -o decrypt
   3) once compilation was done it was ready to run I used .\decrypt command to run and got output.
 OUTPUT :-
-![Decryption Output](assignment.png)
+![Decryption Output](output.png)
+
 
   
 
